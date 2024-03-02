@@ -1,9 +1,8 @@
 import logging
-import time
 from pathlib import Path
 from typing import Optional, Union
 
-from decryptomatte.decrypt import DecyrptoMatte
+from decryptomatte.decrypt import Decrypt
 from decryptomatte.open_image_util import OpenImageUtil
 from decryptomatte.utils import create_file_safe_name
 
@@ -27,7 +26,7 @@ def decryptomatte_example(matte_img_file: Union[Path, str],
         beauty_img = OpenImageUtil.read_image(beauty_img_file)
         beauty_img = OpenImageUtil.premultiply_image(beauty_img)
 
-    d = DecyrptoMatte(matte_img_file, alpha_over_compositing=False)
+    d = Decrypt(matte_img_file, alpha_over_compositing=True)
     layers = d.list_layers()
 
     for layer_name, id_matte in d.get_mattes_by_names(layers).items():

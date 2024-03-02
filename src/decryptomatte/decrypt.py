@@ -11,7 +11,7 @@ import OpenImageIO
 import decryptomatte.decrpyt_utils as du
 
 
-class DecyrptoMatte:
+class Decrypt:
     """ A lot of this code is shamelessly borrowed from original cryptomatte_arnold unit tests under BSD-3 license
         https://github.com/Psyop/CryptomatteArnold
         https://github.com/Psyop/Cryptomatte
@@ -331,7 +331,7 @@ class DecyrptoMatte:
                     if id_mattes[high_rank_id][y][x] != coverage_sum:
                         id_mattes[high_rank_id][y][x] = coverage_sum
 
-            if not y % 256:
+            if not y % 256 and x == 0:
                 logging.debug('Reading cryptomatte at vline: %s (%sx%s)', y, width, height)
 
         return id_mattes
