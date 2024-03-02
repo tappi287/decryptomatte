@@ -1,0 +1,30 @@
+[tool.poetry]
+name = "decryptomatte"
+version = "1.0.0"
+description = "Extract Cryptomatte data from EXR image files"
+authors = ["tappi287 <tapper.stefan@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+repository = "https://github.com/tappi287/decryptomatte"
+packages = [{include = "decryptomatte", from="src"}]
+
+[tool.poetry.dependencies]
+python = ">=3.8,<3.12"
+openimageio = [
+    {path = "./whl/OpenImageIO-2.5.8.0-cp311-cp311-win_amd64.whl", python = "3.11"},
+    {path = "./whl/OpenImageIO-2.2.18.0-cp310-cp310-win_amd64.whl", python = "3.10"}
+]
+numpy = ">1.22.4"
+mmh3 = "*"
+
+[tool.poetry.group.dev.dependencies]
+black = "^24.2.0"
+pytest = "^8.0.2"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.pytest.ini_options]
+log_cli = true
+log_cli_level = "DEBUG"
