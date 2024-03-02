@@ -8,18 +8,25 @@ readme = "README.md"
 repository = "https://github.com/tappi287/decryptomatte"
 packages = [{include = "decryptomatte", from="src"}]
 
+
 [tool.poetry.dependencies]
-python = ">=3.8,<3.12"
+python = ">=3.9,<3.12"
 openimageio = [
-    {path = "./whl/OpenImageIO-2.5.8.0-cp311-cp311-win_amd64.whl", python = "3.11"},
-    {path = "./whl/OpenImageIO-2.2.18.0-cp310-cp310-win_amd64.whl", python = "3.10"}
+    {version = "^2.5.8.0", python = "3.11", source = "piwigo" },
+    {version = "^2.0.7", python = "3.10", source = "piwigo" }
 ]
-numpy = ">1.22.4"
+numpy = "^1.26.4"
 mmh3 = "*"
 
 [tool.poetry.group.dev.dependencies]
 black = "^24.2.0"
 pytest = "^8.0.2"
+
+
+[[tool.poetry.source]]
+name = "piwigo"
+url = "https://piwigo.ilikeviecher.com/ftp-upload/packages"
+priority = "supplemental"
 
 [build-system]
 requires = ["poetry-core"]

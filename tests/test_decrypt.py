@@ -64,9 +64,3 @@ def test_decrypt_example():
     sample_beauty_img = input_dir / 'BlenderExample.exr'
 
     decryptomatte_example(sample_matte_img, sample_beauty_img, output_dir=current_output_dir)
-
-
-def test_log():
-    logging.debug('Hello')
-    logging.info('Hello')
-    time.sleep(2)
