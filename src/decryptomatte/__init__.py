@@ -12,7 +12,7 @@ logging.basicConfig(level=logging.DEBUG, format="%(asctime)s %(module)s %(leveln
 def cryptomatte_to_images(matte_img_file: Union[Path, str],
                           beauty_img_file: Optional[Union[Path, str]] = None,
                           out_img_format='.png',
-                          output_dir: Optional[Path, str] = None,
+                          output_dir: Optional[Union[Path, str]] = None,
                           alpha_over_compositing: bool = False):
     """
     Create a single image for every cryptomatte mask. Provide a 'beauty image' to fill the rgb values of
