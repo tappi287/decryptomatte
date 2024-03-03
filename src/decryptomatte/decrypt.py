@@ -2,7 +2,7 @@ import json
 import logging
 import os
 from pathlib import Path
-from typing import List, Optional, Union, Tuple, Generator
+from typing import List, Optional, Union, Tuple, Generator, Dict
 
 import numpy as np
 import time
@@ -12,7 +12,7 @@ import decryptomatte.decrpyt_utils as du
 
 
 class Decrypt:
-    """ A lot of this code is shamelessly borrowed from original cryptomatte_arnold unit tests under BSD-3 license
+    """ A lot of this code is borrowed from original cryptomatte_arnold unit tests under BSD-3 license
         https://github.com/Psyop/CryptomatteArnold
         https://github.com/Psyop/Cryptomatte
     """
@@ -179,11 +179,11 @@ class Decrypt:
 
         return id_mattes_by_name
 
-    def _get_mattes_by_ids(self, target_ids: List[float]) -> dict:
+    def _get_mattes_by_ids(self, target_ids: List[float]) -> Dict[float, np.ndarray]:
         """ Get a alpha coverage matte for every given id
             as dict {id_value[float]: coverage_matte[np.array]}
 
-            Matte arrays are single channel two dimensional arrays(shape: image_height, image_width)
+            Matte arrays are single channel two-dimensional arrays(shape: image_height, image_width)
         """
         if not target_ids:
             return dict()
@@ -296,7 +296,20 @@ class Decrypt:
             for x in range(width):
                 yield x, y
 
-    def _iterate_image(self, width: int, height: int, target_ids: list):
+    def _iterate_image(self, width: int, height: int, target_ids: list) -> Dict[float, np.ndarray]:
+        """
+        Iterate through every image pixel and get the coverage values for the given target ids. This can
+        take alpha over compositing into account. Will set whole pixels opaque if multiple ids are
+        contributing to it.
+
+        Args:
+            width (int): Image pixel width
+            height (int): Image pixel height
+            target_ids (list(float)): List of target ids
+        Returns:
+            dict[(float, numpy.ndarray)]: Mapping from the float id of each object to
+            it's anti-aliased mask.
+        """
         id_mattes = {id_val: np.zeros((height, width), dtype=np.float32) for id_val in target_ids}
 
         for x, y in self._iter_pixels(width, height):
@@ -337,7 +350,7 @@ class Decrypt:
         return id_mattes
 
     @staticmethod
-    def _get_id_coverage_dict(pixel_values, ch_pair_idxs):
+    def _get_id_coverage_dict(pixel_values: Tuple[float], ch_pair_idxs: Tuple[int]) -> Dict[float, float]:
         return {
             pixel_values[x]: pixel_values[y]
             for x, y, in ch_pair_idxs if (x != 0 or y != 0)
@@ -363,6 +376,7 @@ class Decrypt:
         return str()
 
     def get_id_from_readable_layer_name(self, readable_layer_name: str) -> Optional[float]:
+        """ Search for hex_id in the readable_layer_name and returns the float id """
         for hex_id in self.manifest_cache.values():
             if f".{hex_id}." in readable_layer_name:
                 return du.hex_str_to_id(hex_id)
@@ -371,6 +385,7 @@ class Decrypt:
                                  matte: np.ndarray,
                                  id_float: Optional[float] = None,
                                  layer_name: Optional[str] = None) -> np.ndarray:
+        """ Create the alpha matte and fill with it's corresponding id color """
         color = [0.5, 0.5, 0.5]
 
         if layer_name:
@@ -389,7 +404,7 @@ class Decrypt:
         return rgba
 
     @staticmethod
-    def merge_matte_and_rgb(matte: np.ndarray, rgb_img: np.ndarray = None):
+    def merge_matte_and_rgb(matte: np.ndarray, rgb_img: np.ndarray = None) -> np.ndarray:
         """ Merge matte and rgb img array to rgba img array"""
         h, w = matte.shape
         rgba = np.empty((h, w, 4), dtype=matte.dtype)
