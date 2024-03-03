@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "decryptomatte"
-version = "1.0.0"
+version = "1.0.1"
 description = "Extract Cryptomatte data from EXR image files"
 authors = ["tappi287 <tapper.stefan@gmail.com>"]
 license = "MIT"

@@ -23,7 +23,7 @@ class Decrypt:
         self.alpha_over_compositing = alpha_over_compositing
 
         self.img_file = Path(img_file)
-        self.img = OpenImageIO.ImageBuf(img_file.as_posix())
+        self.img = OpenImageIO.ImageBuf(self.img_file.as_posix())
         self._manifest_cache = dict()
         self._metadata = dict()
         self._sorted_metadata = dict()
