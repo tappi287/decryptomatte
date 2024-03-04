@@ -1,4 +1,5 @@
 import ctypes
+import json
 import struct
 
 import mmh3
@@ -10,6 +11,18 @@ def normalize_channel_name(channel_name: str) -> str:
     if channel_name[-2:] in ('.r', '.g', '.b', '.a'):
         return channel_name[:-2] + channel_name[-2:].upper()
     return channel_name
+
+
+def create_layer_object_name(sorted_metadata: dict,id_float: float) -> str:
+    """ Create human-readable name CryptoLayer.HexId.ObjectName """
+    hex_id = id_to_hex_str(id_float)
+    for layer, layer_data in sorted_metadata.items():
+        manifest = {v: k for k, v in json.loads(layer_data["manifest"]).items()}
+        if hex_id not in manifest:
+            continue
+        return f'{layer}.{hex_id}.{manifest[hex_id]}'
+
+    return str()
 
 
 def hex_str_to_id(id_hex_string: str) -> float:

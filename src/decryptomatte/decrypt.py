@@ -175,7 +175,9 @@ class Decrypt:
 
         id_mattes_by_name = dict()
         for id_val, id_matte in self._get_mattes_by_ids(list(id_to_names.keys())).items():
-            id_mattes_by_name[self.create_layer_object_name(id_val)] = id_matte
+            id_mattes_by_name[
+                du.create_layer_object_name(self.sorted_metadata, id_val)
+            ] = id_matte
 
         return id_mattes_by_name
 
@@ -313,7 +315,7 @@ class Decrypt:
         id_mattes = {id_val: np.zeros((height, width), dtype=np.float32) for id_val in target_ids}
 
         for x, y in self._iter_pixels(width, height):
-            result_pixel = self.img.getpixel(x, y)
+            result_pixel = list(self.img.getpixel(x, y))
 
             for cryp_key in self.sorted_metadata:
                 result_id_cov = self._get_id_coverage_dict(
@@ -350,7 +352,7 @@ class Decrypt:
         return id_mattes
 
     @staticmethod
-    def _get_id_coverage_dict(pixel_values: Tuple[float], ch_pair_idxs: Tuple[int]) -> Dict[float, float]:
+    def _get_id_coverage_dict(pixel_values: List[float], ch_pair_idxs: List[int]) -> Dict[float, float]:
         return {
             pixel_values[x]: pixel_values[y]
             for x, y, in ch_pair_idxs if (x != 0 or y != 0)
@@ -361,17 +363,6 @@ class Decrypt:
         for name, hex_id in self.manifest_cache.items():
             if hex_str == hex_id:
                 return name
-
-        return str()
-
-    def create_layer_object_name(self, id_float: float) -> str:
-        """ Create human readable name CryptoLayer.HexId.ObjectName """
-        hex_id = du.id_to_hex_str(id_float)
-        for layer, layer_data in self.sorted_metadata.items():
-            manifest = {v: k for k, v in json.loads(layer_data["manifest"]).items()}
-            if hex_id not in manifest:
-                continue
-            return f'{layer}.{hex_id}.{manifest[hex_id]}'
 
         return str()
 
