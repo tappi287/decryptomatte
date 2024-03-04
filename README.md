@@ -88,5 +88,5 @@ While the class defines internal attributes, use the provided methods to interac
 
 ## Example for creating layered Photoshop psd file
 The tests contain an example to create a layered PSD file with [PhotoshopAPI](https://github.com/EmilDohne/PhotoshopAPI)
-in tests/test_decrypt_to_psd.py
+in [tests/test_decrypt_to_psd.py](tests/test_decrypt_to_psd.py)
 To try you could simply add `PhotoshopAPI = "^0.3.0"` to this poetry env and execute the test.
