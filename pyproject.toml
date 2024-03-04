@@ -21,6 +21,7 @@ mmh3 = "*"
 [tool.poetry.group.dev.dependencies]
 black = "^24.2.0"
 pytest = "^8.0.2"
+cython = "*"
 
 
 [[tool.poetry.source]]
