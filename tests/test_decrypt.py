@@ -12,7 +12,8 @@ def test_decrypt_example():
     input_dir = current_dir / 'data' / 'input'
     current_output_dir.mkdir(exist_ok=True)
 
-    sample_matte_img = input_dir / 'BlenderExample.exr'
-    sample_beauty_img = input_dir / 'BlenderExample.exr'
+    sample_matte_img = input_dir / 'BlenderExample_8k.exr'
+    sample_beauty_img = input_dir / 'BlenderExample_8k.exr'
 
-    cryptomatte_to_images(sample_matte_img, sample_beauty_img, output_dir=current_output_dir)
+    cryptomatte_to_images(sample_matte_img, sample_beauty_img, output_dir=current_output_dir,
+                          alpha_over_compositing=True)

@@ -1,5 +1,6 @@
 import json
 import logging
+import cython
 import os
 from pathlib import Path
 from typing import List, Optional, Union, Tuple, Generator, Dict
@@ -195,7 +196,7 @@ class Decrypt:
 
         start = time.time()
         if self.alpha_over_compositing:
-            id_mattes = self._iterate_image(w, h, target_ids)
+            id_mattes = self.iterate_image(w, h, target_ids)
         else:
             id_mattes = {k: v for k, v in self.get_masks_for_ids(target_ids)}
 
@@ -293,12 +294,15 @@ class Decrypt:
         return coverage_rank
 
     @staticmethod
-    def _iter_pixels(width: int, height: int) -> Generator[Tuple[int, int], None, None]:
+    @cython.boundscheck(False)
+    def iter_pixels(width: int, height: int) -> Generator[Tuple[int, int], None, None]:
+        cdef int x, y
         for y in range(height):
             for x in range(width):
                 yield x, y
 
-    def _iterate_image(self, width: int, height: int, target_ids: list) -> Dict[float, np.ndarray]:
+    @cython.boundscheck(False)
+    def iterate_image(self, width: int, height: int, target_ids: List[float]) -> Dict[float, np.ndarray]:
         """
         Iterate through every image pixel and get the coverage values for the given target ids. This can
         take alpha over compositing into account. Will set whole pixels opaque if multiple ids are
@@ -314,7 +318,7 @@ class Decrypt:
         """
         id_mattes = {id_val: np.zeros((height, width), dtype=np.float32) for id_val in target_ids}
 
-        for x, y in self._iter_pixels(width, height):
+        for x, y in self.iter_pixels(width, height):
             result_pixel = list(self.img.getpixel(x, y))
 
             for cryp_key in self.sorted_metadata:
@@ -326,7 +330,7 @@ class Decrypt:
                 high_rank_id, coverage_sum = 0.0, 0.0
 
                 for id_val, coverage in result_id_cov.items():
-                    if id_val not in id_mattes:
+                    if id_val not in target_ids:
                         continue
 
                     # Sum coverage per id
