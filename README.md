@@ -12,7 +12,7 @@ This package works with Cryptomatte images, extracting and manipulating individu
 ### Install via pip
 While you can install this package from PyPi via pip
 `pip install decryptomatte`
-You'll most likely miss the required binary OpenImageIO wheel for your platform.
+You'll most likely miss the required binary OpenImageIO wheel for your platform. Refer to the [build hints](https://github.com/tappi287/decryptomatte#build-and-install-openimageio-dependency) to build your own OpenImageIO bindings.
 
 ### Install in virtual environment
 On Windows, you can however clone this repository and install a binary OpenImageIO wheel from my private package index:
