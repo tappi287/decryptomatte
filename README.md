@@ -5,14 +5,16 @@ This package works with Cryptomatte images, extracting and manipulating individu
 ![Example](tests/data/input/Titleimg.webp)
 [Artwork by dj3dim](https://blendswap.com/blend/26178)
 
+---
+
 ## Installation
 
-#### Install via pip
+### Install via pip
 While you can install this package from PyPi via pip
 `pip install decryptomatte`
 You'll most likely miss the required binary OpenImageIO wheel for your platform.
 
-#### Install in virtual environment
+### Install in virtual environment
 On Windows, you can however clone this repository and install a binary OpenImageIO wheel from my private package index:
 1. Get [Python](https://python.org) version > 3.9, tested with 3.11
 2. `git clone https://github.com/tappi287/decryptomatte.git`
@@ -22,7 +24,28 @@ On Windows, you can however clone this repository and install a binary OpenImage
 
 You should now be able to import and use this package inside your poetry/virtual environment.
 
-### Example
+### Build and install OpenImageIO Dependency
+If you don't want to use the provided OpenImageIO python wheels or want to use this 
+on another OS or Python Version. 
+You can build your own OpenImageIO Python bindings with [vcpkg](https://vcpkg.io/en/).
+``` bash
+vcpkg install openimageio[pybind11]:x64-windows
+```
+After a successful install you should add these paths from your vcpkg dir to your Python path:
+`vcpkg/packages/openimageio_[platform]/lib/python[version]/site-packages/`
+`vcpkg/installed/[platform]/bin`
+
+You should now be able to do `import OpenImageIO` inside Python.
+
+*Note*:
+Vcpkg will use your default system Python Interpreter. If you have multiple versions installed, 
+make sure you only leave the one active you want to compile for. Binary Python dependencies 
+are bound to a minor version. E.g. building for 3.11 will only work with Python 3.11.x versions
+and not for 3.10.x.
+
+---
+
+## Decryptomatte Example
 
 The package contains a convenience script to extract all masks to individual image files. Usage is show below.
 ``` python
